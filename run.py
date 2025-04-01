@@ -5,11 +5,13 @@ from pydub import AudioSegment
 import numpy as np
 from moviepy import *
 
+
 LYRICS_FOLDER = "lyrics"
 SONGS_FOLDER = "songs"
 BACKGROUNDS_FOLDER = "background"
 OUTPUT_FOLDER = "output_videos"
 FONT = "fonts/font.otf"
+DURATION = 15  # seconds
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
@@ -43,8 +45,22 @@ def create_video(background_path, audio_segment, lyrics_data, output_path, segme
     if background.duration < duration:
         n_loops = int(np.ceil(duration / background.duration))
         background = VideoFileClip(background_path).loop(n_loops)
+    # Crop to 9:16 without stretching
+    w, h = background.size
+    target_w, target_h = 1080, 1920
+    scale = target_h / h
+    new_w = int(w * scale)
+    new_h = int(h * scale)
+    background = background.resized((new_w, new_h))
+    if new_w > target_w:
+        x1 = (new_w - target_w) / 2
+        x2 = x1 + target_w
+        background = background.cropped(x1=x1, y1=0, x2=x2, y2=new_h)
+    # If new_w < target_w, we could letterbox or do something else, but we only strictly handle the usual case here.
+    # Get a random start point for the background video
+    random_start = random.uniform(0, max(0, background.duration - duration))
 
-    background = background.subclipped(0, duration)
+    background = background.subclipped(random_start, random_start + duration)
     # Make final video 9:16
     background = background.resized((1080, 1920))
 
@@ -103,14 +119,14 @@ def main():
     audio = AudioSegment.from_file(audio_path)
     full_duration = len(audio) / 1000
 
-    possible_entries = [entry for entry in subtitles if entry['start_time'] <= (full_duration - 10)]
+    possible_entries = [entry for entry in subtitles if entry['start_time'] <= (full_duration - DURATION)]
     if not possible_entries:
         print("DEBUG: no suitable lyric entries for a 10s segment")
         return
 
     selected_entry = random.choice(possible_entries)
     start_time = selected_entry['start_time']
-    end_time = start_time + 10
+    end_time = start_time + DURATION
     if end_time > full_duration:
         end_time = full_duration
 
