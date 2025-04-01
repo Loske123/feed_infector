@@ -172,7 +172,7 @@ def generate_videos(num_videos=10):
             background_file = random.choice(background_files)
             
             # Load lyrics data
-            lyrics_data = parse_srt_file(lyrics_file)
+            lyrics_data = parse_sr t_file(lyrics_file)
             
             # Get random segment
             audio_segment, start_time, end_time, segment_lyrics = get_random_segment(song_file, lyrics_data)
