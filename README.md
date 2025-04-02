@@ -8,7 +8,7 @@ A Python script to generate short TikTok-style videos with:
 
 ## Setup
 
-It uses python 3.10.11
+It uses python 3.10
 
 1. **Clone the repo** (or download the files).
 
