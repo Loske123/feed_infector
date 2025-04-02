@@ -4,16 +4,19 @@ import re
 from pydub import AudioSegment
 import numpy as np
 from moviepy import *
+import argparse
 
 
 LYRICS_FOLDER = "lyrics"
 SONGS_FOLDER = "songs"
 BACKGROUNDS_FOLDER = "background"
 OUTPUT_FOLDER = "output_videos"
-FONT = "fonts/font.otf"
+FONT = "fonts/OpenSans-Bold.ttf"
 DURATION = 15  # seconds
 
-os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+
+for folder in [LYRICS_FOLDER, SONGS_FOLDER, BACKGROUNDS_FOLDER, "fonts", OUTPUT_FOLDER]:
+    os.makedirs(folder, exist_ok=True)
 
 def parse_srt_file(srt_file):
     with open(srt_file, 'r', encoding='utf-8') as f:
@@ -58,7 +61,7 @@ def create_video(background_path, audio_segment, lyrics_data, output_path, segme
         background = background.cropped(x1=x1, y1=0, x2=x2, y2=new_h)
     # If new_w < target_w, we could letterbox or do something else, but we only strictly handle the usual case here.
     # Get a random start point for the background video
-    random_start = random.uniform(0, max(0, background.duration - duration))
+    random_start = random.uniform(3, max(3, background.duration - duration))
 
     background = background.subclipped(random_start, random_start + duration)
     # Make final video 9:16
@@ -73,7 +76,7 @@ def create_video(background_path, audio_segment, lyrics_data, output_path, segme
         if relative_end > relative_start:
             txt = TextClip(
                 text=lyric['text'],
-                font_size=40,
+                font_size=45,
                 font=FONT,
                 color='white',
                 stroke_color='black',
@@ -86,80 +89,108 @@ def create_video(background_path, audio_segment, lyrics_data, output_path, segme
             text_clips.append(txt)
 
     final_clip = CompositeVideoClip([background] + text_clips)
-    final_clip.write_videofile(output_path, codec='libx264', audio_codec='aac')
+    final_clip.write_videofile(output_path, codec='libx264', audio_codec='aac', write_logfile=False, logger = 'bar', preset="ultrafast", threads=8, fps = 24)
 
     background.close()
     final_clip.close()
     audio.close()
     os.remove(temp_audio_file)
 
-def main():
+def pick_random_song_segment(duration=DURATION):
     songs = [f for f in os.listdir(SONGS_FOLDER) if f.lower().endswith((".mp3", ".wav"))]
     if not songs:
         print("DEBUG: no songs found")
-        return
+        return None
 
     selected_song = random.choice(songs)
-    print("DEBUG: selected song", selected_song)
-
     base_name = os.path.splitext(selected_song)[0]
     srt_file = os.path.join(LYRICS_FOLDER, base_name + ".srt")
 
     if not os.path.exists(srt_file):
-        print("DEBUG: no matching srt found for", base_name)
-        return
+        print(f"DEBUG: no matching srt found for {base_name}")
+        return None
 
-    print("DEBUG: found matching srt", srt_file)
     subtitles = parse_srt_file(srt_file)
     if not subtitles:
         print("DEBUG: srt has no subtitles")
-        return
+        return None
 
     audio_path = os.path.join(SONGS_FOLDER, selected_song)
     audio = AudioSegment.from_file(audio_path)
     full_duration = len(audio) / 1000
 
-    possible_entries = [entry for entry in subtitles if entry['start_time'] <= (full_duration - DURATION)]
+    possible_entries = [entry for entry in subtitles if entry['start_time'] <= (full_duration - duration)]
     if not possible_entries:
-        print("DEBUG: no suitable lyric entries for a 10s segment")
-        return
+        print(f"DEBUG: no suitable lyric entries for a {duration}s segment")
+        return None
 
     selected_entry = random.choice(possible_entries)
     start_time = selected_entry['start_time']
-    end_time = start_time + DURATION
-    if end_time > full_duration:
-        end_time = full_duration
-
-    print("DEBUG: random lyric-based segment", start_time, "to", end_time)
-
-    segment_lyrics = []
-    for entry in subtitles:
-        if entry['end_time'] > start_time and entry['start_time'] < end_time:
-            segment_lyrics.append(entry)
-    print("DEBUG: lyrics in segment:")
-    for entry in segment_lyrics:
-        print(entry)
+    end_time = min(start_time + duration, full_duration)
 
     start_ms = int(start_time * 1000)
     end_ms = int(end_time * 1000)
     segment_audio = audio[start_ms:end_ms]
 
+    # Gather lyrics
+    segment_lyrics = []
+    for entry in subtitles:
+        if entry['end_time'] > start_time and entry['start_time'] < end_time:
+            segment_lyrics.append(entry)
+
+    return {
+        'song': selected_song,
+        'base_name': base_name,
+        'segment_audio': segment_audio,
+        'segment_lyrics': segment_lyrics,
+        'start_time': start_time,
+        'end_time': end_time
+    }
+
+def pick_random_background():
     backgrounds = [f for f in os.listdir(BACKGROUNDS_FOLDER) if f.lower().endswith((".mp4", ".mov", ".avi"))]
     if not backgrounds:
         print("DEBUG: no background videos found")
-        return
+        return None
+    return random.choice(backgrounds)
 
-    selected_background = random.choice(backgrounds)
-    background_path = os.path.join(BACKGROUNDS_FOLDER, selected_background)
+def main():
+    parser = argparse.ArgumentParser(description="Generate random videos with subtitles and a song snippet.")
+    parser.add_argument("--num", type=int, default=1, help="Number of videos to generate")
+    args = parser.parse_args()
 
-    output_video_path = os.path.join(OUTPUT_FOLDER, base_name + "_segment.mp4")
-    create_video(
-        background_path=background_path,
-        audio_segment=segment_audio,
-        lyrics_data=segment_lyrics,
-        output_path=output_video_path,
-        segment_start_time=start_time
-    )
+    for i in range(args.num):
+        # Generate the snippet
+        song_segment = pick_random_song_segment()
+        if not song_segment:
+            return
+
+        print("DEBUG: selected song", song_segment['song'])
+        print("DEBUG: random lyric-based segment", song_segment['start_time'], "to", song_segment['end_time'])
+        print("DEBUG: lyrics in segment:")
+        for entry in song_segment['segment_lyrics']:
+            print(entry)
+
+        # Pick a background
+        background_file = pick_random_background()
+        if not background_file:
+            return
+        background_path = os.path.join(BACKGROUNDS_FOLDER, background_file)
+
+        # Output file, e.g., "songname_segment_1.mp4"
+        output_video_path = os.path.join(
+            OUTPUT_FOLDER,
+            f"{song_segment['base_name']}_segment_{i+1}.mp4"
+        )
+
+        # Create the video
+        create_video(
+            background_path=background_path,
+            audio_segment=song_segment['segment_audio'],
+            lyrics_data=song_segment['segment_lyrics'],
+            output_path=output_video_path,
+            segment_start_time=song_segment['start_time']
+        )
 
 if __name__ == "__main__":
     main()
