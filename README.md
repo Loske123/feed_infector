@@ -15,7 +15,7 @@ It uses python 3.10
 2. **Create a virtual environment** (recommended):
 
    bash
-   python -m venv venv
+   py -3.10 -m venv venv
 
    # Windows
 
