@@ -1,203 +1,456 @@
-﻿1
-00:00:18,840 --> 00:00:19,460
-Zamisli
+1
+00:00:18,850 --> 00:00:20,026
+ZAMISLI
 
 2
-00:00:19,970 --> 00:00:21,600
-radio sam isto sad što radiš ti 
+00:00:20,026 --> 00:00:20,867
+RADIO SAM ISTO
 
 3
-00:00:22,060 --> 00:00:24,060
-Kada vratim film sav se naježim 
+00:00:20,867 --> 00:00:22,148
+SAD ŠTO RADIŠ
 
 4
-00:00:24,680 --> 00:00:26,680
-A rekao sam kevi da sam siguran u ovo 
+00:00:22,148 --> 00:00:23,230
+TI KADA VRATI FILM
 
 5
-00:00:26,960 --> 00:00:28,960
-li vraćam se sa mnogo ili se neću vratiti
+00:00:23,230 --> 00:00:24,552
+SAV SE NAJEŽIM
 
 6
-00:00:29,850 --> 00:00:32,470
-Takve karte su na stolu a delili smo jednu koka kolu
+00:00:24,552 --> 00:00:25,393
+A REKAO SAM
 
 7
-00:00:32,700 --> 00:00:36,450
-Kao pravi psi, ja i moji ratnici, koji sada sa mnom su na tronu
+00:00:25,393 --> 00:00:26,574
+KEVI DA SAM SIGURAN U
 
 8
-00:00:37,070 --> 00:00:38,830
-Bitno je samo ko se smeje poslednji
+00:00:26,574 --> 00:00:27,195
+OVO ILI VRAĆAM
 
 9
-00:00:39,270 --> 00:00:41,270
- Nemam problem s tim da li su me volel 
+00:00:27,195 --> 00:00:27,976
+SE SA MNOGU
 
 10
-00:00:41,470 --> 00:00:43,470
-I šta sam ja za njih, osvetnik il' pobednik 
+00:00:27,976 --> 00:00:28,617
+ILI SE NEĆU
 
 11
-00:00:43,670 --> 00:00:45,670
-Nije fejk rep nego je komerc real
+00:00:28,617 --> 00:00:30,059
+VRATITI
 
 12
-00:00:46,430 --> 00:00:48,430
-Danas kreću novi klinci, gledam ih
+00:00:30,059 --> 00:00:30,359
+TAKVE
 
 13
-00:00:48,630 --> 00:00:50,500
-Istim putem kojim smo mi kretali
+00:00:30,359 --> 00:00:31,460
+KARTI SU NA STOLU
 
 14
-00:00:50,600 --> 00:00:52,600
-Želim im da postane zvezdani
+00:00:31,460 --> 00:00:32,321
+A DELILI SMO
 
 15
-00:00:52,690 --> 00:00:54,860
-Nijedan put nije dug ako je vredan cilj
+00:00:32,321 --> 00:00:33,223
+JEDNU KOKA KOLU KAO
 
 16
-00:00:55,350 --> 00:00:57,350
-Zna mе svaki ćošak, svaki bulevar
+00:00:33,223 --> 00:00:34,064
+PRAVI PSI JA I
 
 17
-00:00:57,550 --> 00:00:59,550
-Iz Brabusa u vilu, pravi superstar
+00:00:34,064 --> 00:00:35,205
+MOJI RATNICI KOJI
 
 18
-00:00:59,750 --> 00:01:01,750
-A u stvari ja još nisam dao čak ni pet
+00:00:35,205 --> 00:00:35,906
+SADA SA MNOM SU
 
 19
-00:01:01,950 --> 00:01:03,950
-Posto gasa, prosto, ja sam kumе taj
+00:00:35,906 --> 00:00:37,528
+NA TRONU BITNO JE
 
 20
-00:01:04,230 --> 00:01:06,230
-A šta je pravi rep? Ono kad baciš vers
+00:00:37,528 --> 00:00:39,551
+SAMO KO SE SME POSLEDNJI
 
 21
-00:01:06,580 --> 00:01:08,580
-Od ulaganja samo manifest
+00:00:39,551 --> 00:00:39,871
+NEMAM PROBLEM S
 
 22
-00:01:08,780 --> 00:01:10,780
-Što da praviš brend kad možeš da pratiš trend
+00:00:39,871 --> 00:00:40,332
+TIM DA LI
 
 23
-00:01:11,000 --> 00:01:13,000
-Ja nisam iz tog sveta, kupujem Pradin veš
+00:00:40,332 --> 00:00:41,453
+SU ME VOLELI I
 
 24
-00:01:13,210 --> 00:01:16,990
-Salvador Dali, svaki moj dijamant je zapravo pravi
+00:00:41,453 --> 00:00:42,554
+ŠTA SAM JA ZA NJIH
 
 25
-00:01:17,190 --> 00:01:19,620
-Gle šta im radim, muči ih Lambo i Range
+00:00:42,554 --> 00:00:42,995
+OSVETNIK IL POBEDNIK
 
 26
-00:01:19,700 --> 00:01:21,700
-Ma pusti ih, CarGo i renta
+00:00:42,995 --> 00:00:44,957
+NIJE FAKE RAP
 
 27
-00:01:21,900 --> 00:01:23,900
-Crnkinje u pustinji služe mi mango i med
+00:00:44,957 --> 00:00:46,339
+NEGO JE KOMREC RIL
 
 28
-00:01:24,040 --> 00:01:26,040
-A bilo je blato i beda
+00:00:46,339 --> 00:00:46,880
+DANAS KREĆU
 
 29
-00:01:26,240 --> 00:01:28,980
-Sad sve što dotaknem postane zlato i keš
+00:00:46,880 --> 00:00:47,801
+NOVI KLINCI GLEDAM
 
 30
-00:01:29,180 --> 00:01:31,540
-Sa periferije pravo u centar
+00:00:47,801 --> 00:00:49,402
+IH ISTIM PUTEM KOJIM
 
 31
-00:01:31,740 --> 00:01:33,740
-Ostao sam hladan, krv je postala
+00:00:49,402 --> 00:00:50,584
+SMO MI KRETALI
 
 32
-00:01:33,940 --> 00:01:35,940
-Plava, tajna do kraja je opstala
+00:00:50,584 --> 00:00:51,485
+ŽELIM IM DA
 
 33
-00:01:36,140 --> 00:01:38,140
-I možda moje pesme sada znaju svi
+00:00:51,485 --> 00:00:53,487
+POSTANU ZVEZDANI NIJEDAN PUT
 
 34
-00:01:38,540 --> 00:01:40,540
-Al' i dalje znam da niko ne zna ko sam ja
+00:00:53,487 --> 00:00:54,188
+NIJE DUG AKO
 
 35
-00:01:40,740 --> 00:01:42,740
-Pobego sam mnogo, nije korak-dva
+00:00:54,188 --> 00:00:55,429
+JE VREDAN CILJ
 
 36
-00:01:42,940 --> 00:01:44,940
-Da je lako svi bi išli mojim stopama
+00:00:55,429 --> 00:00:56,311
+ZNA ME SVAKI ĆOŠAK
 
 37
-00:01:45,140 --> 00:01:47,140
-Kad stigneš tu sa dna skroz iznad oblaka
+00:00:56,311 --> 00:00:57,812
+SVAKI BOULEVAR IZ
 
 38
-00:01:47,340 --> 00:01:49,640
-Svoj i nedokazan, snob si bezobrazan
+00:00:57,812 --> 00:00:58,633
+BRABUSA U VILU
 
 39
-00:01:50,140 --> 00:01:51,200
-Naplati znanje
+00:00:58,633 --> 00:00:59,995
+PRAVI SUPERSTAR A U
 
 40
-00:01:51,380 --> 00:01:54,070
-Po celoj Evropi znaju ove balkanske kajle
+00:00:59,995 --> 00:01:00,676
+STVARI JA JOŠ
 
 41
-00:01:54,270 --> 00:01:57,000
-Status nedodirljiv, nije ego nego vidi
+00:01:00,676 --> 00:01:01,557
+NISAM DAO ČAK NI
 
 42
-00:01:57,200 --> 00:01:58,840
-Ja sam balkanski Kanye
+00:01:01,557 --> 00:01:02,938
+PET POSTO GASA
 
 43
-00:01:59,330 --> 00:02:01,330
-I sve bih uradio isto da nazad me vrate
+00:01:02,938 --> 00:01:03,539
+PROSTO JA SAM
 
 44
-00:02:02,750 --> 00:02:05,530
-Kroz arapske noći trošim švajcarske pare
+00:01:03,539 --> 00:01:04,300
+KUME TAJ
 
 45
-00:02:05,620 --> 00:02:07,820
-Daj francusko vino i žabarske šare
+00:01:04,300 --> 00:01:05,461
+A ŠTA JE PRAVI RAP
 
 46
-00:02:10,750 --> 00:02:13,800
-Zamisli - radio sam isto sad što radiš ti
+00:01:05,461 --> 00:01:06,142
+ONO KAD BACAŠ
 
 47
-00:02:13,910 --> 00:02:15,910
-Kada vratim film sav se naježim
+00:01:06,142 --> 00:01:07,744
+VERS OD ULAGANJA
 
 48
-00:02:16,030 --> 00:02:18,610
-A rekao sam kevi da sam siguran u ovo
+00:01:07,744 --> 00:01:09,226
+SAMO MANIFEST ŠTO DA
 
 49
-00:02:18,700 --> 00:02:21,200
-Ili vraćam se sa mnogo ili se neću vratiti
+00:01:09,226 --> 00:01:09,966
+PRAVIŠ BRAND KAD
 
 50
-00:02:21,650 --> 00:02:24,910
-Takve karte su na stolu a delili smo jednu koka kolu
+00:01:09,966 --> 00:01:10,467
+MOŽEŠ DA PRATIŠ TREND
 
 51
-00:02:25,050 --> 00:02:28,450
-Kao pravi psi, ja i moji ratnici, koji sada sa mnom su na tronu
+00:01:10,467 --> 00:01:12,069
+JE NISAM ISTOG SVETA
+
+52
+00:01:12,069 --> 00:01:12,910
+KUPUJEM U PRADI
+
+53
+00:01:12,910 --> 00:01:14,873
+VEŠ SALVADOR DALI
+
+54
+00:01:14,873 --> 00:01:15,955
+SVAKI MOJ DIJAMANT
+
+55
+00:01:15,955 --> 00:01:17,196
+JE ZAPRAVO PRAVI
+
+56
+00:01:17,196 --> 00:01:18,398
+GLE ŠTA IM RADIM
+
+57
+00:01:18,398 --> 00:01:19,399
+MUČI IH LAMBO
+
+58
+00:01:19,399 --> 00:01:20,461
+I RANGE MA PUSTI
+
+59
+00:01:20,461 --> 00:01:21,983
+IH CARGO I RENTA
+
+60
+00:01:21,983 --> 00:01:22,884
+CRNKINJE U PUSTINJI
+
+61
+00:01:22,884 --> 00:01:23,946
+SLUŽE MI MANGO
+
+62
+00:01:23,946 --> 00:01:25,087
+I MED A BILO
+
+63
+00:01:25,087 --> 00:01:25,788
+JE BLATO I
+
+64
+00:01:25,788 --> 00:01:26,730
+BEDA SAD SVE
+
+65
+00:01:26,730 --> 00:01:28,512
+ŠTO DOTAKNEM POSTANE ZLATO
+
+66
+00:01:28,512 --> 00:01:29,494
+I KEŠ SA
+
+67
+00:01:29,494 --> 00:01:30,515
+PERIFERIJE PRAVO U CENTAR
+
+68
+00:01:30,515 --> 00:01:33,178
+OSTAO SAM HLADAN KRV JE
+
+69
+00:01:33,178 --> 00:01:34,320
+POSTALA
+
+70
+00:01:34,320 --> 00:01:35,041
+PLAVA TAJNA DO
+
+71
+00:01:35,041 --> 00:01:36,483
+KRAJA JE OSTALA
+
+72
+00:01:36,483 --> 00:01:37,444
+I MOŽDA MOJE PESME
+
+73
+00:01:37,444 --> 00:01:38,705
+SADA ZNAJU SVI
+
+74
+00:01:38,705 --> 00:01:39,346
+AL I DALJE ZNAM
+
+75
+00:01:39,346 --> 00:01:40,067
+DA NIKO NE ZNA
+
+76
+00:01:40,067 --> 00:01:41,709
+KO' SAM JA POBEGAO
+
+77
+00:01:41,709 --> 00:01:42,070
+SAM MNOGO
+
+78
+00:01:42,070 --> 00:01:43,211
+NIJE KORAK DVA
+
+79
+00:01:43,211 --> 00:01:43,732
+DA JE LAKO
+
+80
+00:01:43,732 --> 00:01:44,333
+SVI BI IŠLI
+
+81
+00:01:44,333 --> 00:01:45,875
+MOJIM STOPAMA KADA STIGNEŠ
+
+82
+00:01:45,875 --> 00:01:46,395
+TU SA DNA
+
+83
+00:01:46,395 --> 00:01:47,477
+SKROZ IZNAD OBLAKA
+
+84
+00:01:47,477 --> 00:01:48,598
+SVOJ I NEDOKAZAN
+
+85
+00:01:48,598 --> 00:01:50,921
+SNOB SI BEZOBREZAN NAPLATI
+
+86
+00:01:50,921 --> 00:01:52,663
+ZNANJE PO CELOJ EVROPI
+
+87
+00:01:52,663 --> 00:01:54,366
+ZNAJU OVE BALKANSKE KAJLE
+
+88
+00:01:54,366 --> 00:01:55,507
+STATUS NE DODIRLJIV
+
+89
+00:01:55,507 --> 00:01:57,489
+NIJE EGO NEGO VIDI
+
+90
+00:01:57,489 --> 00:01:58,430
+JA SAM BALKANSKI
+
+91
+00:01:58,430 --> 00:01:59,731
+KANYE I SVE
+
+92
+00:01:59,731 --> 00:02:01,212
+BIH URADIO ISTO DA
+
+93
+00:02:01,212 --> 00:02:02,754
+NAZAD ME VRATE
+
+94
+00:02:02,754 --> 00:02:04,075
+KROZ ARAPSKE NOĆI
+
+95
+00:02:04,075 --> 00:02:05,776
+TROŠIM ŠVAJCARSKE PARE DAJ
+
+96
+00:02:05,776 --> 00:02:06,877
+FRANCUSKO VINO I
+
+97
+00:02:06,877 --> 00:02:08,298
+ŽABRSKE ŠARE
+
+98
+00:02:11,842 --> 00:02:12,062
+ZAMISLI
+
+99
+00:02:12,062 --> 00:02:12,863
+RADIO SAM ISTO
+
+100
+00:02:12,863 --> 00:02:14,324
+SAD ŠTO RADŠI TI
+
+101
+00:02:14,324 --> 00:02:15,225
+KADA VRATIM FILM
+
+102
+00:02:15,225 --> 00:02:16,586
+SAV SE NAJEŽIM
+
+103
+00:02:16,586 --> 00:02:17,227
+A REKAO SAM
+
+104
+00:02:17,227 --> 00:02:18,508
+KEVI DA SAM SIGURAN U
+
+105
+00:02:18,508 --> 00:02:19,329
+OVO ILI VRAĆAM
+
+106
+00:02:19,329 --> 00:02:19,909
+SE SA MNOGO
+
+107
+00:02:19,909 --> 00:02:22,411
+ILI SE NEĆU VRATITI
+
+108
+00:02:22,411 --> 00:02:23,573
+TAKVE KARTE SU NA STOLU
+
+109
+00:02:23,573 --> 00:02:24,013
+A DELILI SMO
+
+110
+00:02:24,013 --> 00:02:24,898
+JEDNU KOKA KOLU
+
+111
+00:02:24,898 --> 00:02:25,943
+KAO PRAVI PSI JA
+
+112
+00:02:25,943 --> 00:02:26,949
+I MOJI RATNICI
+
+113
+00:02:26,949 --> 00:02:27,794
+KOJI SADA SA MNOM
+
+114
+00:02:27,794 --> 00:02:28,794
+SU NA TRONU
+

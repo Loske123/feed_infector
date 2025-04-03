@@ -76,7 +76,7 @@ def create_video(background_path, audio_segment, lyrics_data, output_path, segme
         if relative_end > relative_start:
             txt = TextClip(
                 text=lyric['text'],
-                font_size=45,
+                font_size=55,
                 font=FONT,
                 color='white',
                 stroke_color='black',
