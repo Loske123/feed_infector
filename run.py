@@ -1,6 +1,7 @@
 import os
 import random
 import re
+import string
 from pydub import AudioSegment
 import numpy as np
 from moviepy import *
@@ -61,7 +62,10 @@ def create_video(background_path, audio_segment, lyrics_data, output_path, segme
         background = background.cropped(x1=x1, y1=0, x2=x2, y2=new_h)
     # If new_w < target_w, we could letterbox or do something else, but we only strictly handle the usual case here.
     # Get a random start point for the background video
-    random_start = random.uniform(3, max(3, background.duration - duration))
+    offset = 0
+    if background.duration > 35:
+        offset = 4
+    random_start = random.uniform(offset, max(offset, background.duration - duration))
 
     background = background.subclipped(random_start, random_start + duration)
     # Make final video 9:16
@@ -153,6 +157,9 @@ def pick_random_background():
         print("DEBUG: no background videos found")
         return None
     return random.choice(backgrounds)
+def random_suffix(lenght=6):
+    chars = string.ascii_lowercase + string.digits
+    return ''.join(random.choice(chars) for _ in range(lenght))
 
 def main():
     parser = argparse.ArgumentParser(description="Generate random videos with subtitles and a song snippet.")
@@ -176,11 +183,11 @@ def main():
         if not background_file:
             return
         background_path = os.path.join(BACKGROUNDS_FOLDER, background_file)
-
+        suffix = random_suffix()
         # Output file, e.g., "songname_segment_1.mp4"
         output_video_path = os.path.join(
             OUTPUT_FOLDER,
-            f"{song_segment['base_name']}_segment_{i+1}.mp4"
+            f"{song_segment['base_name']}_{suffix}.mp4"
         )
 
         # Create the video
