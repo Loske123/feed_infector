@@ -40,7 +40,7 @@ def parse_srt_file(srt_file):
     return subtitle_entries
 
 def create_video(background_path, audio_segment, lyrics_data, output_path, segment_start_time):
-    background = VideoFileClip(background_path)
+    background = VideoFileClip(background_path, )
     temp_audio_file = os.path.join(OUTPUT_FOLDER, "temp_audio.mp3")
     audio_segment.export(temp_audio_file, format="mp3")
     audio = AudioFileClip(temp_audio_file)
@@ -177,7 +177,7 @@ def main():
         print("DEBUG: lyrics in segment:")
         for entry in song_segment['segment_lyrics']:
             print(entry)
-
+        print("Video number", i + 1, "of", args.num)
         # Pick a background
         background_file = pick_random_background()
         if not background_file:
