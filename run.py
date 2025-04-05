@@ -39,7 +39,7 @@ def parse_srt_file(srt_file):
         })
     return subtitle_entries
 
-def create_video(background_path, audio_segment, lyrics_data, output_path, segment_start_time):
+def create_video(background_path, audio_segment, lyrics_data, output_path, segment_start_time, threads=1):
     background = VideoFileClip(background_path, )
     temp_audio_file = os.path.join(OUTPUT_FOLDER, "temp_audio.mp3")
     audio_segment.export(temp_audio_file, format="mp3")
@@ -91,9 +91,9 @@ def create_video(background_path, audio_segment, lyrics_data, output_path, segme
             )
             txt = txt.with_position(('center', 'center')).with_start(relative_start).with_end(relative_end)
             text_clips.append(txt)
-
-    final_clip = CompositeVideoClip([background] + text_clips)
-    final_clip.write_videofile(output_path, codec='libx264', audio_codec='aac', write_logfile=False, logger = 'bar', preset="ultrafast", threads=8, fps = 24)
+            
+    final_clip = CompositeVideoClip([background] + text_clips, size=background.size)
+    final_clip.write_videofile(output_path, codec='h264_nvenc', audio_codec='aac', write_logfile=False, logger = 'bar', ffmpeg_params=["-preset", "fast", "-cq", "23"], fps = 24, threads=threads)
 
     background.close()
     final_clip.close()
@@ -164,11 +164,13 @@ def random_suffix(lenght=6):
 def main():
     parser = argparse.ArgumentParser(description="Generate random videos with subtitles and a song snippet.")
     parser.add_argument("--num", type=int, default=1, help="Number of videos to generate")
+    parser.add_argument("--duration", type=int, default=DURATION, help="Duration of each video segment in seconds")
+    parser.add_argument("--threads", type=int, default=1, help="Number of threads to use for video generation")
     args = parser.parse_args()
 
     for i in range(args.num):
         # Generate the snippet
-        song_segment = pick_random_song_segment()
+        song_segment = pick_random_song_segment(args.duration)
         if not song_segment:
             return
 
@@ -196,7 +198,8 @@ def main():
             audio_segment=song_segment['segment_audio'],
             lyrics_data=song_segment['segment_lyrics'],
             output_path=output_video_path,
-            segment_start_time=song_segment['start_time']
+            segment_start_time=song_segment['start_time'],
+            threads=args.threads
         )
 
 if __name__ == "__main__":
