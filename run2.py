@@ -14,11 +14,13 @@ LYRICS_FOLDER = "lyrics"
 SONGS_FOLDER = "songs"
 BACKGROUNDS_FOLDER = "background"
 FONTS_FOLDER = "fonts"
+RANDOM_CAPTIONS_FONTS_FOLDER = "random_captions_fonts"
 OUTPUT_FOLDER = "output_videos"
+RANDOM_CAPTIONS_FILE = "random_captions.txt"
 DURATION = 15  # seconds
 
 
-for folder in [LYRICS_FOLDER, SONGS_FOLDER, BACKGROUNDS_FOLDER, FONTS_FOLDER, OUTPUT_FOLDER]:
+for folder in [LYRICS_FOLDER, SONGS_FOLDER, BACKGROUNDS_FOLDER, FONTS_FOLDER, RANDOM_CAPTIONS_FONTS_FOLDER, OUTPUT_FOLDER]:
     os.makedirs(folder, exist_ok=True)
 
 def get_available_fonts():
@@ -31,14 +33,66 @@ def get_available_fonts():
             if file.lower().endswith(font_extensions):
                 fonts.append(os.path.join(FONTS_FOLDER, file))
     
+    return fonts if fonts else ['Arial']  # Fallback to Arial if no fonts found
+
+def get_random_caption_fonts():
+    """Get list of available random caption font files"""
+    font_extensions = ('.ttf', '.otf', '.woff', '.woff2')
+    fonts = []
     
+    if os.path.exists(RANDOM_CAPTIONS_FONTS_FOLDER):
+        for file in os.listdir(RANDOM_CAPTIONS_FONTS_FOLDER):
+            if file.lower().endswith(font_extensions):
+                fonts.append(os.path.join(RANDOM_CAPTIONS_FONTS_FOLDER, file))
     
     return fonts if fonts else ['Arial']  # Fallback to Arial if no fonts found
+
+def get_random_captions():
+    """Read random captions from file"""
+    if not os.path.exists(RANDOM_CAPTIONS_FILE):
+        print(f"WARNING: {RANDOM_CAPTIONS_FILE} not found. Creating sample file...")
+        # Create a sample file with some example captions
+        sample_captions = [
+            "🔥 This hits different 🔥",
+            "When the beat drops just right ✨",
+            "POV: You found your new favorite song",
+            "This song lives rent-free in my head 🎵",
+            "The vibes are immaculate ✨",
+            "Main character energy 💫",
+            "This is pure art 🎨",
+            "When music becomes emotion 💭",
+            "The perfect soundtrack to life 🌟",
+            "This deserves more recognition 👑"
+        ]
+        with open(RANDOM_CAPTIONS_FILE, 'w', encoding='utf-8') as f:
+            for caption in sample_captions:
+                f.write(caption + '\n')
+        print(f"Created sample {RANDOM_CAPTIONS_FILE} with example captions")
+    
+    try:
+        with open(RANDOM_CAPTIONS_FILE, 'r', encoding='utf-8') as f:
+            captions = [line.strip() for line in f.readlines() if line.strip()]
+        return captions
+    except Exception as e:
+        print(f"Error reading {RANDOM_CAPTIONS_FILE}: {e}")
+        return []
 
 def pick_random_font():
     """Select a random font from available fonts"""
     fonts = get_available_fonts()
     return random.choice(fonts)
+
+def pick_random_caption_font():
+    """Select a random font from available caption fonts"""
+    fonts = get_random_caption_fonts()
+    return random.choice(fonts)
+
+def pick_random_caption():
+    """Select a random caption from the captions file"""
+    captions = get_random_captions()
+    if not captions:
+        return None
+    return random.choice(captions)
 
 def parse_srt_file(srt_file):
     with open(srt_file, 'r', encoding='utf-8') as f:
@@ -94,13 +148,21 @@ def detect_gpu_codec():
     print("DEBUG: No GPU detected, using CPU with fast settings")
     return 'libx264', ["-preset", "ultrafast", "-crf", "23"]
 
-def create_video(background_path, audio_segment, lyrics_data, output_path, segment_start_time, threads=1):
+def create_video(background_path, audio_segment, lyrics_data, output_path, segment_start_time, threads=1, use_random_caption=False):
     # Get GPU codec settings
     video_codec, ffmpeg_params = detect_gpu_codec()
     
     # Pick random font for this video
     selected_font = pick_random_font()
-    print(f"DEBUG: Using font: {selected_font}")
+    print(f"DEBUG: Using lyrics font: {selected_font}")
+    
+    # Get random caption if requested
+    random_caption = None
+    caption_font = None
+    if use_random_caption:
+        random_caption = pick_random_caption()
+        caption_font = pick_random_caption_font()
+        print(f"DEBUG: Using caption: '{random_caption}' with font: {caption_font}")
     
     background = VideoFileClip(background_path)
     temp_audio_file = os.path.join(OUTPUT_FOLDER, "temp_audio.mp3")
@@ -140,6 +202,39 @@ def create_video(background_path, audio_segment, lyrics_data, output_path, segme
     background = background.with_audio(audio)
 
     text_clips = []
+    
+    # Add random caption at the top if requested
+    if use_random_caption and random_caption:
+        try:
+            caption_clip = TextClip(
+                text=random_caption,
+                font_size=50,
+                font=caption_font,
+                color='white',
+                stroke_color='black',
+                stroke_width=3,
+                method='label',
+                text_align='center'
+            )
+            # Position at top of screen with some padding
+            caption_clip = caption_clip.with_position(('center', 150)).with_duration(duration)
+            text_clips.append(caption_clip)
+        except Exception as e:
+            print(f"DEBUG: Caption font error with {caption_font}, falling back to Arial: {e}")
+            caption_clip = TextClip(
+                text=random_caption,
+                font_size=45,
+                font='Arial',
+                color='white',
+                stroke_color='black',
+                stroke_width=3,
+                method='label',
+                text_align='center'
+            )
+            caption_clip = caption_clip.with_position(('center', 150)).with_duration(duration)
+            text_clips.append(caption_clip)
+    
+    # Add lyrics in the center
     for lyric in lyrics_data:
         relative_start = max(0, lyric['start_time'] - segment_start_time)
         relative_end = min(duration, lyric['end_time'] - segment_start_time)
@@ -274,7 +369,7 @@ def create_song_folder(song_base_name):
     os.makedirs(song_folder, exist_ok=True)
     return song_folder
 
-def generate_videos_per_song(songs, videos_per_song, duration, threads):
+def generate_videos_per_song(songs, videos_per_song, duration, threads, use_random_caption=False):
     """Generate specific number of videos for each song"""
     total_videos = len(songs) * videos_per_song
     current_video = 0
@@ -314,13 +409,14 @@ def generate_videos_per_song(songs, videos_per_song, duration, threads):
                     lyrics_data=song_segment['segment_lyrics'],
                     output_path=output_video_path,
                     segment_start_time=song_segment['start_time'],
-                    threads=threads
+                    threads=threads,
+                    use_random_caption=use_random_caption
                 )
                 print(f"✓ Created: {output_video_path}")
             except Exception as e:
                 print(f"✗ Failed to create video: {e}")
 
-def generate_random_videos(num_videos, duration, threads):
+def generate_random_videos(num_videos, duration, threads, use_random_caption=False):
     """Generate random videos from random songs"""
     for i in range(num_videos):
         # Generate the snippet
@@ -355,7 +451,8 @@ def generate_random_videos(num_videos, duration, threads):
                 lyrics_data=song_segment['segment_lyrics'],
                 output_path=output_video_path,
                 segment_start_time=song_segment['start_time'],
-                threads=threads
+                threads=threads,
+                use_random_caption=use_random_caption
             )
             print(f"✓ Created: {output_video_path}")
         except Exception as e:
@@ -365,6 +462,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate videos with subtitles and song snippets using GPU acceleration.")
     parser.add_argument("--duration", type=int, default=DURATION, help="Duration of each video segment in seconds")
     parser.add_argument("--threads", type=int, default=1, help="Number of threads to use for video generation")
+    parser.add_argument("--random-cap", action="store_true", help="Add random captions at the top of videos")
     
     # Mutually exclusive group for generation mode
     group = parser.add_mutually_exclusive_group(required=True)
@@ -386,14 +484,20 @@ def main():
     # List available fonts
     fonts = get_available_fonts()
     print(f"\nFound {len(fonts)} fonts available for random selection")
+    
+    # Check random captions setup if requested
+    if args.random_cap:
+        captions = get_random_captions()
+        caption_fonts = get_random_caption_fonts()
+        print(f"Random captions enabled: {len(captions)} captions, {len(caption_fonts)} caption fonts")
 
     if args.random:
         print(f"\n=== Generating {args.random} random videos ===")
-        generate_random_videos(args.random, args.duration, args.threads)
+        generate_random_videos(args.random, args.duration, args.threads, args.random_cap)
     
     elif args.per_song:
         print(f"\n=== Generating {args.per_song} videos per song ({len(songs) * args.per_song} total) ===")
-        generate_videos_per_song(songs, args.per_song, args.duration, args.threads)
+        generate_videos_per_song(songs, args.per_song, args.duration, args.threads, args.random_cap)
 
 if __name__ == "__main__":
     main()
