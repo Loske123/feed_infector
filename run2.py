@@ -31,13 +31,7 @@ def get_available_fonts():
             if file.lower().endswith(font_extensions):
                 fonts.append(os.path.join(FONTS_FOLDER, file))
     
-    # Add system fonts as fallback
-    system_fonts = [
-        'Arial', 'Times-New-Roman', 'Courier-New', 'Helvetica', 
-        'Georgia', 'Verdana', 'Trebuchet-MS', 'Comic-Sans-MS',
-        'Impact', 'Lucida-Sans', 'Tahoma', 'Century-Gothic'
-    ]
-    fonts.extend(system_fonts)
+    
     
     return fonts if fonts else ['Arial']  # Fallback to Arial if no fonts found
 
@@ -153,7 +147,7 @@ def create_video(background_path, audio_segment, lyrics_data, output_path, segme
             try:
                 txt = TextClip(
                     text=lyric['text'],
-                    font_size=55,
+                    font_size=75,
                     font=selected_font,
                     color='white',
                     stroke_color='black',
