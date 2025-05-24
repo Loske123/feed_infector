@@ -48,7 +48,28 @@ def create_video(background_path, audio_segment, lyrics_data, output_path, segme
 
     if background.duration < duration:
         n_loops = int(np.ceil(duration / background.duration))
-        background = VideoFileClip(background_path).loop(n_loops)
+        background = VideoFileClip(background_path).with_effects([vfx.Loop(n_loops)])
+        
+    if background.duration > duration:
+        background = background.subclipped(0, duration)
+        
+    #If background is shorter than 10s we choose two different backgrounds at random durations of minimum 3s and maximum 10s
+    # while (background.duration < 10 and background.duration != duration):
+    #     # Pick a random background
+    #     background2 = pick_random_background()
+    #     if not background2:
+    #         return
+    #     background2_path = os.path.join(BACKGROUNDS_FOLDER, background2)
+    #     background2 = VideoFileClip(background2_path).subclipped(0, random.uniform(3, 10))
+    #     # Concatenate the two backgrounds
+    #     background = concatenate_videoclips([background, background2])
+    #     # If the background is longer than the audio, we trim it to the audio duration
+    #     if background.duration > duration:
+    #         background = background.subclipped(0, duration)
+    
+    
+    
+    
     # Crop to 9:16 without stretching
     w, h = background.size
     target_w, target_h = 1080, 1920
