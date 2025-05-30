@@ -208,7 +208,7 @@ def create_video(background_path, audio_segment, lyrics_data, output_path, segme
         try:
             caption_clip = TextClip(
                 text=random_caption,
-                font_size=50,
+                font_size=90,
                 font=caption_font,
                 color='white',
                 stroke_color='black',
@@ -301,8 +301,41 @@ def get_available_songs():
                 })
     return songs
 
-def pick_song_segment(song_info, duration=DURATION):
+def parse_duration_arg(duration_str):
+    """Parse duration argument - can be single number or range like '12-20'"""
+    if isinstance(duration_str, int):
+        return duration_str, duration_str  # Single duration
+    
+    duration_str = str(duration_str)
+    if '-' in duration_str:
+        try:
+            min_dur, max_dur = map(int, duration_str.split('-'))
+            if min_dur > max_dur:
+                min_dur, max_dur = max_dur, min_dur  # Swap if reversed
+            return min_dur, max_dur
+        except ValueError:
+            print(f"Invalid duration range format: {duration_str}. Using default {DURATION}s")
+            return DURATION, DURATION
+    else:
+        try:
+            dur = int(duration_str)
+            return dur, dur
+        except ValueError:
+            print(f"Invalid duration format: {duration_str}. Using default {DURATION}s")
+            return DURATION, DURATION
+
+def get_random_duration(min_dur, max_dur):
+    """Get a random duration between min and max (inclusive)"""
+    if min_dur == max_dur:
+        return min_dur
+    return random.randint(min_dur, max_dur)
+
+def pick_song_segment(song_info, duration_range=(DURATION, DURATION)):
     """Pick a segment from a specific song"""
+    # Get actual duration for this segment
+    min_dur, max_dur = duration_range
+    duration = get_random_duration(min_dur, max_dur)
+    
     subtitles = parse_srt_file(song_info['srt_file'])
     if not subtitles:
         print(f"DEBUG: srt has no subtitles for {song_info['base_name']}")
@@ -337,10 +370,11 @@ def pick_song_segment(song_info, duration=DURATION):
         'segment_audio': segment_audio,
         'segment_lyrics': segment_lyrics,
         'start_time': start_time,
-        'end_time': end_time
+        'end_time': end_time,
+        'actual_duration': duration
     }
 
-def pick_random_song_segment(duration=DURATION):
+def pick_random_song_segment(duration_range=(DURATION, DURATION)):
     """Pick a random song segment (legacy function for compatibility)"""
     songs = get_available_songs()
     if not songs:
@@ -348,7 +382,7 @@ def pick_random_song_segment(duration=DURATION):
         return None
     
     selected_song = random.choice(songs)
-    return pick_song_segment(selected_song, duration)
+    return pick_song_segment(selected_song, duration_range)
 
 def pick_random_background():
     backgrounds = [f for f in os.listdir(BACKGROUNDS_FOLDER) if f.lower().endswith((".mp4", ".mov", ".avi"))]
@@ -369,10 +403,11 @@ def create_song_folder(song_base_name):
     os.makedirs(song_folder, exist_ok=True)
     return song_folder
 
-def generate_videos_per_song(songs, videos_per_song, duration, threads, use_random_caption=False):
+def generate_videos_per_song(songs, videos_per_song, duration_range, threads, use_random_caption=False):
     """Generate specific number of videos for each song"""
     total_videos = len(songs) * videos_per_song
     current_video = 0
+    min_dur, max_dur = duration_range
     
     for song_info in songs:
         print(f"\n=== Processing song: {song_info['base_name']} ===")
@@ -382,12 +417,13 @@ def generate_videos_per_song(songs, videos_per_song, duration, threads, use_rand
             current_video += 1
             
             # Generate the snippet
-            song_segment = pick_song_segment(song_info, duration)
+            song_segment = pick_song_segment(song_info, duration_range)
             if not song_segment:
                 print(f"Could not generate segment for {song_info['base_name']}, skipping...")
                 continue
 
-            print(f"DEBUG: segment {song_segment['start_time']:.1f}s to {song_segment['end_time']:.1f}s")
+            actual_duration = song_segment.get('actual_duration', max_dur)
+            print(f"DEBUG: segment {song_segment['start_time']:.1f}s to {song_segment['end_time']:.1f}s (duration: {actual_duration}s)")
             print(f"Video {current_video} of {total_videos} ({i+1}/{videos_per_song} for this song)")
             
             # Pick a background
@@ -416,17 +452,20 @@ def generate_videos_per_song(songs, videos_per_song, duration, threads, use_rand
             except Exception as e:
                 print(f"✗ Failed to create video: {e}")
 
-def generate_random_videos(num_videos, duration, threads, use_random_caption=False):
+def generate_random_videos(num_videos, duration_range, threads, use_random_caption=False):
     """Generate random videos from random songs"""
+    min_dur, max_dur = duration_range
+    
     for i in range(num_videos):
         # Generate the snippet
-        song_segment = pick_random_song_segment(duration)
+        song_segment = pick_random_song_segment(duration_range)
         if not song_segment:
             print("Could not generate random segment, skipping...")
             continue
 
+        actual_duration = song_segment.get('actual_duration', max_dur)
         print(f"\nDEBUG: selected song {song_segment['song']}")
-        print(f"DEBUG: segment {song_segment['start_time']:.1f}s to {song_segment['end_time']:.1f}s")
+        print(f"DEBUG: segment {song_segment['start_time']:.1f}s to {song_segment['end_time']:.1f}s (duration: {actual_duration}s)")
         print(f"Video {i + 1} of {num_videos}")
         
         # Create song folder
@@ -460,7 +499,7 @@ def generate_random_videos(num_videos, duration, threads, use_random_caption=Fal
 
 def main():
     parser = argparse.ArgumentParser(description="Generate videos with subtitles and song snippets using GPU acceleration.")
-    parser.add_argument("--duration", type=int, default=DURATION, help="Duration of each video segment in seconds")
+    parser.add_argument("--duration", type=str, default=str(DURATION), help="Duration of each video segment in seconds (single number or range like '12-20')")
     parser.add_argument("--threads", type=int, default=1, help="Number of threads to use for video generation")
     parser.add_argument("--random-cap", action="store_true", help="Add random captions at the top of videos")
     
@@ -470,6 +509,15 @@ def main():
     group.add_argument("--per-song", type=int, help="Generate N videos for each available song")
     
     args = parser.parse_args()
+
+    # Parse duration argument
+    duration_range = parse_duration_arg(args.duration)
+    min_dur, max_dur = duration_range
+    
+    if min_dur == max_dur:
+        print(f"Using fixed duration: {min_dur} seconds")
+    else:
+        print(f"Using random duration range: {min_dur}-{max_dur} seconds")
 
     # Get available songs
     songs = get_available_songs()
@@ -493,11 +541,11 @@ def main():
 
     if args.random:
         print(f"\n=== Generating {args.random} random videos ===")
-        generate_random_videos(args.random, args.duration, args.threads, args.random_cap)
+        generate_random_videos(args.random, duration_range, args.threads, args.random_cap)
     
     elif args.per_song:
         print(f"\n=== Generating {args.per_song} videos per song ({len(songs) * args.per_song} total) ===")
-        generate_videos_per_song(songs, args.per_song, args.duration, args.threads, args.random_cap)
+        generate_videos_per_song(songs, args.per_song, duration_range, args.threads, args.random_cap)
 
 if __name__ == "__main__":
     main()
