@@ -116,36 +116,62 @@ def parse_srt_file(srt_file):
 
 def detect_gpu_codec():
     """Detect available GPU codec and return appropriate parameters"""
+    import subprocess
+    
+    # Test for NVIDIA GPU (most reliable method)
     try:
-        # Test for NVIDIA GPU (most common)
-        import subprocess
-        result = subprocess.run(['nvidia-smi'], capture_output=True, text=True)
+        result = subprocess.run(['nvidia-smi'], capture_output=True, text=True, timeout=5)
         if result.returncode == 0:
-            print("DEBUG: NVIDIA GPU detected, using h264_nvenc")
-            return 'h264_nvenc', ["-preset", "p4", "-cq", "23", "-b:v", "0"]
+            # Double-check that NVENC is actually available
+            try:
+                test_result = subprocess.run([
+                    'ffmpeg', '-hide_banner', '-f', 'lavfi', '-i', 'testsrc=duration=1:size=320x240:rate=1',
+                    '-c:v', 'h264_nvenc', '-f', 'null', '-'
+                ], capture_output=True, text=True, timeout=10)
+                if test_result.returncode == 0:
+                    print("DEBUG: NVIDIA GPU detected and NVENC available")
+                    return 'h264_nvenc', ["-preset", "p4", "-cq", "23", "-b:v", "0"]
+            except:
+                pass
     except:
         pass
     
+    # Test for AMD GPU
     try:
-        # Test for AMD GPU
-        result = subprocess.run(['rocm-smi'], capture_output=True, text=True)
+        result = subprocess.run(['rocm-smi'], capture_output=True, text=True, timeout=5)
         if result.returncode == 0:
-            print("DEBUG: AMD GPU detected, using h264_amf")
-            return 'h264_amf', ["-quality", "speed", "-rc", "cqp", "-qp", "23"]
+            # Test if AMF encoder actually works
+            try:
+                test_result = subprocess.run([
+                    'ffmpeg', '-hide_banner', '-f', 'lavfi', '-i', 'testsrc=duration=1:size=320x240:rate=1',
+                    '-c:v', 'h264_amf', '-f', 'null', '-'
+                ], capture_output=True, text=True, timeout=10)
+                if test_result.returncode == 0:
+                    print("DEBUG: AMD GPU detected and AMF available")
+                    return 'h264_amf', ["-quality", "speed", "-rc", "cqp", "-qp", "23"]
+            except:
+                pass
     except:
         pass
     
+    # Test for Intel GPU with actual functionality test
     try:
-        # Test for Intel GPU (newer systems)
-        result = subprocess.run(['ffmpeg', '-hide_banner', '-encoders'], capture_output=True, text=True)
-        if 'h264_qsv' in result.stdout:
-            print("DEBUG: Intel GPU detected, using h264_qsv")
-            return 'h264_qsv', ["-preset", "fast", "-global_quality", "23"]
+        # First check if Intel GPU device exists
+        intel_gpu_check = subprocess.run(['lspci'], capture_output=True, text=True, timeout=5)
+        if 'Intel' in intel_gpu_check.stdout and ('VGA' in intel_gpu_check.stdout or 'Display' in intel_gpu_check.stdout):
+            # Test if QSV encoder actually works
+            test_result = subprocess.run([
+                'ffmpeg', '-hide_banner', '-f', 'lavfi', '-i', 'testsrc=duration=1:size=320x240:rate=1',
+                '-c:v', 'h264_qsv', '-f', 'null', '-'
+            ], capture_output=True, text=True, timeout=10)
+            if test_result.returncode == 0:
+                print("DEBUG: Intel GPU detected and QSV available")
+                return 'h264_qsv', ["-preset", "fast", "-global_quality", "23"]
     except:
         pass
     
-    # Fallback to CPU with faster settings
-    print("DEBUG: No GPU detected, using CPU with fast settings")
+    # Fallback to CPU with optimized settings
+    print("DEBUG: No GPU acceleration available, using optimized CPU encoding")
     return 'libx264', ["-preset", "ultrafast", "-crf", "23"]
 
 def create_video(background_path, audio_segment, lyrics_data, output_path, segment_start_time, threads=1, use_random_caption=False):
